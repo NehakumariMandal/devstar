@@ -27,6 +27,9 @@
 <Intro heading={data.meta.title} description={data.meta.description} />
 
 <section class="bg-white dark:bg-gray-900">
+	<div class="mx-auto max-w-screen-xl lg:px-12">
+		<div
+			class="card">
 	<hr />
 	<div id="invoice">
 		<table class="w-full">
@@ -96,6 +99,18 @@
 		</table>
 		<hr />
 	</div>
-
 	<button class="w-10 h-10 border bg-sky-500 rounded m-3" on:click={addInputSet}>+</button>
+</div>
+</div>
 </section>
+
+
+<style>
+	:is(.dark .card) {
+		box-shadow: rgba(255, 255, 255, 0.5) 0 0 0 2px;
+		background-color: white;
+	}
+	.card {
+		box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 2px;
+	}
+</style>
