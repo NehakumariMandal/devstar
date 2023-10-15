@@ -15,6 +15,7 @@
 	let index = -1;
 	let showFirstPair = true;
 	let moveDescription = false;
+	let showTaxInfo = false;
 
 	let subtotal = 0;
 	let tax = 0;
@@ -116,7 +117,13 @@
 										<p class="flex justify-center text-2xl">₹{inputSet.quantity * inputSet.rate}</p>
 									</td>
 									<td class="text-center">
-										<input class="w-8 h-8 rounded-lg bg-black" type="checkbox" name="" id="" />
+										<input
+											class="w-8 h-8 rounded-lg bg-black"
+											type="checkbox"
+											name=""
+											id=""
+											bind:checked={showTaxInfo}
+										/>
 									</td>
 								</tr>
 								<tr>
@@ -145,7 +152,38 @@
 				class="w-10 h-10 border font-bold text-3xl text-white bg-gray-600 rounded-lg shadow-lg m-3"
 				on:click={addInputSet}>+</button
 			>
-			<hr class=" py-5" />
+			<hr class="py-5" />
+			<div class=" flex justify-center">
+				<div class="Tax w-2/5 pb-5" class:hidden={!showTaxInfo}>
+					<div class="pb-4 text-center text-2xl font-bold">
+						<h2>Tax</h2>
+					</div>
+					<div class=" space-x-5 py-2 items-center flex justify-between">
+						<label class=" font-bold text-xl w-2/12" for="taxType">Type</label>
+						<select class="w-3/4" id="taxType">
+							<option value="none" selected>On Total</option>
+						</select>
+					</div>
+					<div class=" space-x-5 py-2 items-center flex justify-between">
+						<label class=" font-bold text-xl w-2/12" for="taxLabel">Label:</label>
+						<input value="Tax" class="w-3/4" type="text" />
+					</div>
+					<div class=" space-x-5 py-2 items-center flex justify-between">
+						<label class=" font-bold text-xl w-2/12" for="taxRate">Rate:</label>
+						<div class="w-3/4 relative">
+							<input
+								id="rateInput"
+								min="0"
+								class="w-full pr-8"
+								type="number"
+								value="0.000"
+								oninput="this.value = this.value.replace(/[^\d.]/g, '')"
+							/>
+							<span class="absolute inset-y-0 flex left-20 items-center text-gray-500">%</span>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div
 				class="card gap-12 items-center mx-auto max-w-screen-xl overflow-hidden rounded-lg lg:grid lg:grid-cols-2"
 			>
