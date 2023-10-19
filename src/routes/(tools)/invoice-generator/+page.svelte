@@ -27,7 +27,7 @@
 			const itemAmount = inputSet.quantity * inputSet.rate || 0;
 			const itemTax = itemAmount * (inputSet.taxRate / 100);
 			inputSet.tax = itemTax; // Store tax for each item
-			return acc + itemAmount + itemTax;
+			return acc + itemAmount;
 		}, 0);
 
 		tax = inputSets.reduce((acc, inputSet) => {
