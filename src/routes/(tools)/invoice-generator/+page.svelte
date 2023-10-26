@@ -21,6 +21,7 @@
 	let currentDate = new Date().toISOString().split('T')[0];
 	let dueDate = currentDate;
 
+	//Calculates Amount and Tax
 	let subtotal = 0;
 	let tax = 0;
 	let total = 0;
@@ -41,6 +42,7 @@
 		balanceDue = total;
 	}
 
+	//Add Items
 	function addInputSet() {
 		index += 1;
 		inputSets = [
@@ -52,6 +54,7 @@
 		updateTotals();
 	}
 
+	//Delete Input
 	function deleteInputSet(idToDelete) {
 		const indexToDelete = inputSets.findIndex((inputSet) => inputSet.id === idToDelete);
 		if (indexToDelete !== -1) {
@@ -61,6 +64,7 @@
 		}
 	}
 
+	//Receipt
 	function onOptionChange() {
 		if (selectedOption === 'None' || selectedOption === 'Due On Receipt') {
 			showDueInput = false;
@@ -109,6 +113,20 @@
 
 				dueDate = dueDateObj.toISOString().split('T')[0];
 			}, 10);
+		}
+	}
+
+	function handleSignatureUpload(event) {
+		const signatureInput = event.target;
+		const signatureImage = document.getElementById('signatureImage');
+		if (signatureInput.files && signatureInput.files[0]) {
+			const reader = new FileReader();
+
+			reader.onload = function (e) {
+				signatureImage.src = e.target.result;
+			};
+
+			reader.readAsDataURL(signatureInput.files[0]);
 		}
 	}
 </script>
@@ -303,6 +321,16 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="p-8 h-full">
+				<h1>Signature</h1>
+				<input type="file" accept="image/*" id="signatureInput" on:change={handleSignatureUpload} />
+				<img
+					src=""
+					id="signatureImage"
+					alt="Signature Preview"
+					style="max-width: 100%; max-height: 200px;"
+				/>
 			</div>
 		</div>
 	</div>
