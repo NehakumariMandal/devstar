@@ -267,7 +267,7 @@
 									</td>
 									<td class="text-center">
 										<input
-											class="w-16 text-start text-xl rounded"
+											class="w-16 text-center text-l rounded"
 											type="number"
 											min="0"
 											bind:value={inputSet.taxRate}
@@ -302,7 +302,7 @@
 			>
 			<hr class="py-5" />
 			<div
-				class="card gap-12 items-center mx-auto max-w-screen-xl overflow-hidden rounded-lg lg:grid lg:grid-cols-2"
+				class="gap-12 items-center mx-auto max-w-screen-xl overflow-hidden rounded-lg lg:grid lg:grid-cols-2"
 			>
 				<div class="p-8 h-full" />
 				<div class="p-8 h-full">
