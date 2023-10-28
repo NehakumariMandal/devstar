@@ -22,6 +22,7 @@
 	let selectedOption = 'None';
 	let currentDate = new Date().toISOString().split('T')[0];
 	let dueDate = currentDate;
+	let invoiceNo = 'INV0001';
 
 	let subtotal = 0;
 	let tax = 0;
@@ -30,7 +31,7 @@
 	function updateTotals() {
 		subtotal = inputSets.reduce((acc, inputSet) => {
 			const itemAmount = inputSet.quantity * inputSet.rate || 0;
-			const itemTax = itemAmount * (Math.abs(inputSet.taxRate) / 100);
+			const itemTax = itemAmount * (inputSet.taxRate / 100);
 			inputSet.tax = itemTax; // Store tax for each item
 			return acc + itemAmount;
 		}, 0);
@@ -137,13 +138,17 @@
 		showAdditionalDetails = true;
 	}
 	let selectedImage = null;
-
+	let signatureInput = null;
 	function handleSubmit() {
 		convertToPDF(1);
 	}
-
 	async function handleFileChange(event) {
 		selectedImage = event.target.files[0];
+		let reader = new FileReader();
+		reader.readAsDataURL(selectedImage);
+		reader.onload = (event) => {
+			logo_image = event.target.result;
+		};
 	}
 
 	async function convertToPDF(pdf) {
@@ -180,10 +185,30 @@
 				response.blob()
 			);
 			doc.addImage(URL.createObjectURL(imageBlob), 'JPEG', 150, 40, 40, 40);
+			doc.setFont(undefined, 'bold');
+			doc.text(170, 95, 'INVOICE');
+			doc.text(170, 107, 'DATE');
+			doc.text(170, 119, 'DUE DATE');
+			doc.text(170, 131, 'BALANCE');
+			doc.setFont(undefined, 'normal');
+			doc.text(170, 100, invoiceNo);
+			doc.text(170, 112, currentDate);
+			doc.text(170, 124, dueDate);
+			doc.text(170, 136, '$'+balanceDue.toString());
 		} else {
 			const imgData =
 				'https://is2-ssl.mzstatic.com/image/thumb/Purple122/v4/df/8a/8f/df8a8fab-91e6-7781-529d-bf4ca601b64f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.jpeg/256x256bb.jpg';
-			doc.addImage(imgData, 'JPEG', 150, 40, 40, 40);
+			// doc.addImage(imgData, 'JPEG', 150, 40, 40, 40);
+			doc.setFont(undefined, 'bold');
+			doc.text(170, 40, 'INVOICE');
+			doc.text(170, 52, 'DATE');
+			doc.text(170, 64, 'DUE DATE');
+			doc.text(170, 76, 'BALANCE');
+			doc.setFont(undefined, 'normal');
+			doc.text(170, 45, invoiceNo);
+			doc.text(170, 57, currentDate);
+			doc.text(170, 69, dueDate);
+			doc.text(170, 81, '$'+balanceDue.toString());
 		}
 		if (
 			ClientAddress.length != 0 ||
@@ -194,7 +219,7 @@
 			ClientPhone.length != 0
 		) {
 			doc.setLineDashPattern([1, 1], 0);
-			if (y >= 80) doc.line(20, (y += 10), 193, y);
+			if (y >= 80) doc.line(20, (y += 10), 160, y);
 			else doc.line(20, (y += 10), 140, y);
 			doc.setLineDashPattern();
 			doc.text(20, (y += 10), 'BILL TO');
@@ -220,6 +245,9 @@
 		if (y < 80) {
 			y = 80;
 		}
+		if(selectedImage){
+			y = 136;
+		}
 		doc.setTextColor(0, 0, 0);
 		doc.line(20, (y += 10), 193, y);
 		doc.setFont(undefined, 'bold');
@@ -235,10 +263,47 @@
 		doc.text(60, 285, '</Dev>star_Invoice-Generator - Copyright-2023');
 		y += 10;
 		let subtotal = 0;
-		let tax = 0;
 		const maxLength = inputSets.length;
 		inputSets.forEach((inputSet, index) => {
 			doc.setTextColor(68, 68, 68);
+			if(signatureInput){
+				if (y > 180 && y < 270 && index <= maxLength) {
+					if (showFirstPair || index > 0) {
+						doc.text(`${inputSet.item}`, 20, y);
+						doc.text(`$${inputSet.rate}`, 120, y);
+						doc.text(`${inputSet.quantity}`, 145, y);
+						let amount = parseFloat(`${inputSet.rate}`) * parseFloat(`${inputSet.quantity}`);
+						subtotal += amount;
+						doc.text('$' + amount.toString(), 165, y);
+						y = y + 10;
+					}
+				} else if (y > 230) {
+					doc.addPage();
+					doc.setLineWidth(0.5);
+					doc.setDrawColor(0, 0, 0);
+					doc.line(15, 275, 190, 275);
+					doc.text(60, 285, '</Dev>star_Invoice-Generator - Copyright-2023');
+					y = 30;
+					if (showFirstPair || index > 0) {
+						doc.text(`${inputSet.item}`, 20, y);
+						doc.text(`$${inputSet.rate}`, 120, y);
+						doc.text(`${inputSet.quantity}`, 145, y);
+						let amount = parseFloat(`${inputSet.rate}`) * parseFloat(`${inputSet.quantity}`);
+						subtotal += amount;
+						doc.text('$' + amount.toString(), 165, y);
+						y = y + 10;
+					}
+				} else if (showFirstPair || index > 0) {
+					doc.text(`${inputSet.item}`, 20, y);
+					doc.text(`$${inputSet.rate}`, 120, y);
+					doc.text(`${inputSet.quantity}`, 145, y);
+					let amount = parseFloat(`${inputSet.rate}`) * parseFloat(`${inputSet.quantity}`);
+					subtotal += amount;
+					doc.text('$' + amount.toString(), 165, y);
+					y = y + 10;
+				}
+			}
+		else{
 			if (y > 230 && y < 270 && index <= maxLength) {
 				if (showFirstPair || index > 0) {
 					doc.text(`${inputSet.item}`, 20, y);
@@ -248,9 +313,6 @@
 					subtotal += amount;
 					doc.text('$' + amount.toString(), 165, y);
 					y = y + 10;
-					if (inputSet.tax == true) {
-						tax += (18 / 100) * amount;
-					}
 				}
 			} else if (y > 230) {
 				doc.addPage();
@@ -267,9 +329,6 @@
 					subtotal += amount;
 					doc.text('$' + amount.toString(), 165, y);
 					y = y + 10;
-					if (inputSet.tax == true) {
-						tax += (18 / 100) * amount;
-					}
 				}
 			} else if (showFirstPair || index > 0) {
 				doc.text(`${inputSet.item}`, 20, y);
@@ -279,18 +338,32 @@
 				subtotal += amount;
 				doc.text('$' + amount.toString(), 165, y);
 				y = y + 10;
-				if (inputSet.tax == true) {
-					tax += (18 / 100) * amount;
-				}
 			}
+		}
 		});
+		if(y>180 && signatureInput){
+			doc.addPage();
+			doc.setLineWidth(0.5);
+			doc.setDrawColor(0, 0, 0);
+			doc.line(15, 275, 190, 275);
+			doc.text(60, 285, '</Dev>star_Invoice-Generator - Copyright-2023');
+			y = 30;
+		}
+		else if(y>230){
+			doc.addPage();
+			doc.setLineWidth(0.5);
+			doc.setDrawColor(0, 0, 0);
+			doc.line(15, 275, 190, 275);
+			doc.text(60, 285, '</Dev>star_Invoice-Generator - Copyright-2023');
+			y = 30;
+		}
 		y += 5;
 		doc.setTextColor(0, 0, 0);
 		doc.line(20, y, 193, y);
 		doc.text('SUBTOTAL', 100, (y += 10));
 		doc.text(`$${subtotal}`, 165, y);
-		doc.text('TAX(18%)', 100, (y += 10));
-		tax = Math.round(tax * 100) / 100;
+		doc.text('TAX($)', 100, (y += 10));
+		// tax = Math.round(tax * 100) / 100;
 		doc.text(`$${tax}`, 165, y);
 		y += 5;
 		doc.line(100, y, 193, y);
@@ -300,6 +373,16 @@
 		doc.text(`$${total}`, 165, y);
 		y += 5;
 		doc.line(100, y, 193, y);
+		if(signatureInput){
+			const imageBlob = await fetch(URL.createObjectURL(signatureInput.files[0])).then((response) =>
+					response.blob()
+				);
+				doc.addImage(URL.createObjectURL(imageBlob), 'JPEG', 150, y+=10, 40, 20);
+				doc.setFontSize(12);
+				doc.text(150, y+=30, 'DATE SIGNED');
+				doc.setFont(undefined, 'normal');
+				doc.text(150, y+=5, currentDate);
+		}
 		if (pdf == 1) {
 			doc.save('Invoice.pdf');
 		} else {
@@ -351,7 +434,7 @@
 	}
 
 	function handleSignatureUpload(event) {
-		const signatureInput = event.target;
+		signatureInput = event.target;
 		const signatureImage = document.getElementById('signatureImage');
 		if (signatureInput.files && signatureInput.files[0]) {
 			const reader = new FileReader();
@@ -420,27 +503,28 @@
 				<div
 					class="box1 block max-w p-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:border-gray-700"
 				>
-					<form>
-						<label for="invoice_header" />
-						<input type="text" bind:value={invoice} placeholder="Invoice Header" required /><br
-						/><br />
-						<label class="text-xl font-bold" for="logo">Logo:</label>
-						<input
+					<form class="lg:flex justify-between">
+						<div class="w-1/2 pr-4">
+						  <label for="invoice_header" class="text-xl font-bold">Invoice</label>
+						  <input type="text" bind:value={invoice} placeholder="Invoice Header" required class="mt-1 p-2 block  text-sm text-gray-900 border border-gray-300  focus:outline-none focus:ring focus:ring-indigo-200" />
+						</div><br>
+						<div class="w-1/2">
+						  <label for="logo" class="text-xl font-bold">Logo</label>
+						  <input
 							accept="image/*"
 							on:change={handleFileChange}
-							class="block w-1/4 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-							aria-describedby="user_avatar_help"
-							id="user_avatar"
+							class="mt-1 block text-sm text-gray-900 border border-gray-300 rounded cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
 							type="file"
-						/>
-						<div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">
+						  />
+						  <div class="mt-1 text-sm text-gray-500 dark:text-gray-300">
 							A logo of your company to be display over invoice.
+						  </div>
 						</div>
-					</form>
+					  </form>
 					<div class="invoice-container invoice-detail-body py-8">
 						<div class="lg:flex lg:space-x-4">
 							<div class="lg:w-1/2">
-								<h1 class="text-2xl font-bold text-gray-900">From</h1>
+								<h1 class="text-2xl font-bold text-gray-900 headR">From</h1>
 								<br />
 								<form>
 									<div class="input-with-label">
@@ -537,7 +621,7 @@
 							</div>
 							<br />
 							<div class="lg:w-1/2">
-								<h1 class="text-2xl font-bold text-gray-900">To</h1>
+								<h1 class="text-2xl font-bold text-gray-900 headR">To</h1>
 								<br />
 								<form>
 									<div class="input-with-label">
@@ -612,36 +696,39 @@
 					<br />
 					<hr />
 
-					<div class="invoice-container invoice-detail-body py-8">
-						<div class="lg:flex lg:space-x-4">
-							<div class="mb-4 flex justify-between items-center text-xl">
-								<label class="mr-5" for="invoice_id">Number</label>
-								<input
-									type="text"
-									name="number"
-									placeholder="INV0001"
-									class="w-48 font-bold px-3 py-2 border rounded-lg text-xl"
-									required
-								/>
-							</div>
-							<div class="mb-4 flex justify-between items-center text-xl">
-								<label class="mr-5" for="invoice_id">Date</label>
-								<input
-									type="date"
-									name="date"
-									bind:value={currentDate}
-									class="w-48 px-3 py-2 border rounded-lg"
-									required
-								/>
-							</div>
-							<div class="mb-4 flex justify-between items-center text-xl">
-								<label class="mr-5" for="terms">Terms</label>
-								<div class="px-3 py-2 border rounded-lg">
+					<div class="mx-auto max-w-screen-xl lg:px-12">
+						<!-- <div class="card"> -->
+						<div class="Invoice-Receipt w-full m-5 py-5">
+							<div class="w-1/2">
+								<div class="mb-4 flex justify-between items-center text-xl">
+									<label class="mr-5" for="invoice_id">Number</label>
+									<input
+										type="text"
+										name="number"
+										placeholder="INV0001"
+										bind:value={invoiceNo}
+										required
+										class="w-4/5 font-bold text-lg px-3 py-2 border rounded-lg text-xl"
+									/>
+								</div>
+								<div class="mb-4 flex justify-between items-center text-xl">
+									<label class="mr-5" for="invoice_id">Date</label>
+									<input
+										type="date"
+										name="date"
+										bind:value={currentDate}
+										required
+										class="w-4/5 px-3 py-2 border rounded-lg"
+									/>
+								</div>
+								<div class="mb-4 flex justify-between items-center text-xl">
+									<label class="mr-5" for="term">Terms</label>
 									<select
 										name="terms"
 										id="terms"
 										bind:value={selectedOption}
 										on:change={onOptionChange}
+										class="w-4/5 px-3 py-2 border rounded-lg"
 									>
 										<option value="None">None</option>
 										<option value="Custom">Custom</option>
@@ -665,20 +752,19 @@
 										<option selected value="365 Days">365 Days</option>
 									</select>
 								</div>
+								{#if showDueInput}
+									<div class="mb-4 flex justify-between items-center text-xl">
+										<label class="mr-5" for="due">Due</label>
+										<input
+											type="date"
+											bind:value={dueDate}
+											name="due"
+											id="due"
+											class="w-4/5 px-3 py-2 border rounded-lg"
+										/>
+									</div>
+								{/if}
 							</div>
-
-							{#if showDueInput}
-								<div class="mb-4 flex justify-between items-center text-xl">
-									<label class="mr-5" for="due">Due</label>
-									<input
-										type="date"
-										bind:value={dueDate}
-										name="due"
-										id="due"
-										class="w-48 px-3 py-2 border rounded-lg"
-									/>
-								</div>
-							{/if}
 						</div>
 
 						<hr class="border-t border-gray-400" />
@@ -793,7 +879,9 @@
 								<div class="flex justify-between p-1 invoice-summary-label text-xl">
 									Total: <span class="price">₹{total.toFixed(2)}</span>
 								</div>
-								<div class="flex justify-between font-bold p-1 invoice-summary-label text-xl">
+								<div
+									class="flex justify-between font-bold text-lg p-1 invoice-summary-label text-xl"
+								>
 									Balance due: <span class="price">₹{balanceDue.toFixed(2)}</span>
 								</div>
 							</div>
@@ -836,9 +924,6 @@
 	.card {
 		box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 2px;
 	}
-	/* .invoice-detail-body {
-		padding: 10px 10px 10px 10px;
-	} */
 	.input-with-label label {
 		/* display: inline-block; */
 		font-weight: 500;
@@ -868,6 +953,7 @@
 	.invoice-detail-body div div .headR {
 		padding-left: 14%;
 		margin: 0 auto;
+		padding-top: 4%;
 	}
 	.input-with-label {
 		overflow: hidden;
@@ -917,5 +1003,27 @@
 	.Invoice-Receipt div div input,
 	select {
 		width: 65%;
+	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-flow: column;
+		float: right;
+		margin-right: 18%;
+	}
+
+	.logo_image {
+		display: inline-block;
+		max-height: 150px;
+		max-width: 150px;
+	}
+	.invoice-title {
+		display: inline-block;
+		margin-left: 7%;
+		height: 100px;
+		width: 150px;
+		margin-top: 4%;
 	}
 </style>
