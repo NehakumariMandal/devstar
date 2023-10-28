@@ -137,18 +137,11 @@
 	function showAdditionalDetailsFun() {
 		showAdditionalDetails = true;
 	}
-<<<<<<< HEAD
 	let selectedImage = null;
 	let signatureInput = null;
-=======
->>>>>>> 05611f69bfe9867d961e9a39ba0242b5b93da4ad
-
 	function handleSubmit() {
 		convertToPDF(1);
 	}
-	let selectedImage;
-	let logo_image;
-	let Logo_fileinput;
 	async function handleFileChange(event) {
 		selectedImage = event.target.files[0];
 		let reader = new FileReader();
@@ -203,7 +196,6 @@
 			doc.text(170, 124, dueDate);
 			doc.text(170, 136, '$'+balanceDue.toString());
 		} else {
-<<<<<<< HEAD
 			const imgData =
 				'https://is2-ssl.mzstatic.com/image/thumb/Purple122/v4/df/8a/8f/df8a8fab-91e6-7781-529d-bf4ca601b64f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.jpeg/256x256bb.jpg';
 			// doc.addImage(imgData, 'JPEG', 150, 40, 40, 40);
@@ -217,10 +209,6 @@
 			doc.text(170, 57, currentDate);
 			doc.text(170, 69, dueDate);
 			doc.text(170, 81, '$'+balanceDue.toString());
-=======
-			const imgData = '"https://static.thenounproject.com/png/625182-200.png"';
-			doc.addImage(imgData, 'JPEG', 150, 40, 40, 40);
->>>>>>> 05611f69bfe9867d961e9a39ba0242b5b93da4ad
 		}
 		if (
 			ClientAddress.length != 0 ||
@@ -515,7 +503,6 @@
 				<div
 					class="box1 block max-w p-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:border-gray-700"
 				>
-<<<<<<< HEAD
 					<form class="lg:flex justify-between">
 						<div class="w-1/2 pr-4">
 						  <label for="invoice_header" class="text-xl font-bold">Invoice</label>
@@ -534,56 +521,6 @@
 						  </div>
 						</div>
 					  </form>
-					  
-=======
-					<div class="invoice-detail-title content-block">
-						<div class="invoice-title">
-							
-								<label for="invoice_header" />
-								<input type="text" bind:value={invoice} placeholder="Invoice Header" required />
-							
-						</div>
-						<div class="logo">
-							<div
-								class="chan"
-								on:click={() => {
-									Logo_fileinput.click();
-								}}
-							/>
-							<input
-								style="display:none"
-								type="file"
-								accept=".jpg, .jpeg, .png"
-								on:change={handleFileChange}
-								bind:this={Logo_fileinput}
-							/>
-							{#if selectedImage}
-								<img
-									class="logo_image"
-									src={logo_image}
-									alt=""
-									on:click={() => {
-										Logo_fileinput.click();
-									}}
-								/>
-							{:else}
-								<img
-									class="logo_image"
-									src="logoUpload.png"
-									alt=""
-									on:click={() => {
-										Logo_fileinput.click();
-									}}
-								/>
-							{/if}
-
-							<div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">
-								Click to upload
-							</div>
-						</div>
-					</div>
-
->>>>>>> 05611f69bfe9867d961e9a39ba0242b5b93da4ad
 					<div class="invoice-container invoice-detail-body py-8">
 						<div class="lg:flex lg:space-x-4">
 							<div class="lg:w-1/2">
@@ -987,9 +924,6 @@
 	.card {
 		box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 2px;
 	}
-	/* .invoice-detail-body {
-		padding: 10px 10px 10px 10px;
-	} */
 	.input-with-label label {
 		/* display: inline-block; */
 		font-weight: 500;
@@ -1087,19 +1021,9 @@
 	}
 	.invoice-title {
 		display: inline-block;
-		/* align-items:center;
-		justify-content:center;
-		flex-flow:column; */
-		/* float: left; */
-		/* margin-top:3em; */
 		margin-left: 7%;
 		height: 100px;
 		width: 150px;
 		margin-top: 4%;
 	}
-	/* .invoice-detail-body 
-	{
-		display:flex;
-		margin-top:10px;
-	} */
 </style>
