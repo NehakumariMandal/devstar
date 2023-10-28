@@ -137,15 +137,25 @@
 	function showAdditionalDetailsFun() {
 		showAdditionalDetails = true;
 	}
+<<<<<<< HEAD
 	let selectedImage = null;
 	let signatureInput = null;
+=======
+>>>>>>> 05611f69bfe9867d961e9a39ba0242b5b93da4ad
 
 	function handleSubmit() {
 		convertToPDF(1);
 	}
-
+	let selectedImage;
+	let logo_image;
+	let Logo_fileinput;
 	async function handleFileChange(event) {
 		selectedImage = event.target.files[0];
+		let reader = new FileReader();
+		reader.readAsDataURL(selectedImage);
+		reader.onload = (event) => {
+			logo_image = event.target.result;
+		};
 	}
 
 	async function convertToPDF(pdf) {
@@ -193,6 +203,7 @@
 			doc.text(170, 124, dueDate);
 			doc.text(170, 136, '$'+balanceDue.toString());
 		} else {
+<<<<<<< HEAD
 			const imgData =
 				'https://is2-ssl.mzstatic.com/image/thumb/Purple122/v4/df/8a/8f/df8a8fab-91e6-7781-529d-bf4ca601b64f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.jpeg/256x256bb.jpg';
 			// doc.addImage(imgData, 'JPEG', 150, 40, 40, 40);
@@ -206,6 +217,10 @@
 			doc.text(170, 57, currentDate);
 			doc.text(170, 69, dueDate);
 			doc.text(170, 81, '$'+balanceDue.toString());
+=======
+			const imgData = '"https://static.thenounproject.com/png/625182-200.png"';
+			doc.addImage(imgData, 'JPEG', 150, 40, 40, 40);
+>>>>>>> 05611f69bfe9867d961e9a39ba0242b5b93da4ad
 		}
 		if (
 			ClientAddress.length != 0 ||
@@ -500,6 +515,7 @@
 				<div
 					class="box1 block max-w p-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:border-gray-700"
 				>
+<<<<<<< HEAD
 					<form class="lg:flex justify-between">
 						<div class="w-1/2 pr-4">
 						  <label for="invoice_header" class="text-xl font-bold">Invoice</label>
@@ -519,16 +535,67 @@
 						</div>
 					  </form>
 					  
+=======
+					<div class="invoice-detail-title content-block">
+						<div class="invoice-title">
+							
+								<label for="invoice_header" />
+								<input type="text" bind:value={invoice} placeholder="Invoice Header" required />
+							
+						</div>
+						<div class="logo">
+							<div
+								class="chan"
+								on:click={() => {
+									Logo_fileinput.click();
+								}}
+							/>
+							<input
+								style="display:none"
+								type="file"
+								accept=".jpg, .jpeg, .png"
+								on:change={handleFileChange}
+								bind:this={Logo_fileinput}
+							/>
+							{#if selectedImage}
+								<img
+									class="logo_image"
+									src={logo_image}
+									alt=""
+									on:click={() => {
+										Logo_fileinput.click();
+									}}
+								/>
+							{:else}
+								<img
+									class="logo_image"
+									src="logoUpload.png"
+									alt=""
+									on:click={() => {
+										Logo_fileinput.click();
+									}}
+								/>
+							{/if}
+
+							<div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">
+								Click to upload
+							</div>
+						</div>
+					</div>
+
+>>>>>>> 05611f69bfe9867d961e9a39ba0242b5b93da4ad
 					<div class="invoice-container invoice-detail-body py-8">
 						<div class="lg:flex lg:space-x-4">
 							<div class="lg:w-1/2">
-								<h1 class="text-2xl font-bold text-gray-900">From</h1>
+								<h1 class="text-2xl font-bold text-gray-900 headR">From</h1>
 								<br />
 								<form>
 									<div class="input-with-label">
-										<label for="invoice-company-name" class="dark:text-gray-900 text-xl">Name:</label>
+										<label for="invoice-company-name" class="dark:text-gray-900 text-xl"
+											>Name:</label
+										>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="text"
 											bind:value={businessName}
 											id="invoice-company-name"
@@ -538,7 +605,7 @@
 									<div class="input-with-label">
 										<label for="invoice-company-email" class="text-gray-900 text-xl">Email:</label>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="email"
 											bind:value={businessEmail}
 											id="invoice-company-email"
@@ -547,9 +614,11 @@
 										/>
 									</div>
 									<div class="input-with-label">
-										<label for="invoice-company-address" class=" text-gray-900 text-xl">Address:</label>
+										<label for="invoice-company-address" class=" text-gray-900 text-xl"
+											>Address:</label
+										>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="text"
 											bind:value={businessAddress}
 											id="invoice-company-address"
@@ -560,7 +629,7 @@
 									<div class="input-with-label">
 										<label for="invoice-company-phone" class="text-gray-900 text-xl">Phone:</label>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="text"
 											bind:value={businessPhone}
 											id="invoice-company-phone"
@@ -574,7 +643,7 @@
 											class="text-gray-900 text-xl">Business Number:</label
 										>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="text"
 											bind:value={businessNumber}
 											id="invoice-company-business-number"
@@ -588,9 +657,11 @@
 									{/if}
 									{#if showAdditionalDetails}
 										<div class="input-with-label">
-											<label for="invoice-company-website" class="text-gray-900 text-xl">Website:</label>
+											<label for="invoice-company-website" class="text-gray-900 text-xl"
+												>Website:</label
+											>
 											<input
-											class="w-full rounded text-xl"
+												class="w-full rounded text-xl"
 												type="text"
 												bind:value={businessWebsite}
 												id="invoice-company-website"
@@ -598,9 +669,10 @@
 											/>
 										</div>
 										<div class="input-with-label">
-											<label for="invoice-company-owner" class="text-gray-900 text-xl">Owner:</label>
+											<label for="invoice-company-owner" class="text-gray-900 text-xl">Owner:</label
+											>
 											<input
-											class="w-full rounded text-xl"
+												class="w-full rounded text-xl"
 												type="text"
 												bind:value={businessOwner}
 												id="invoice-company-owner"
@@ -612,13 +684,13 @@
 							</div>
 							<br />
 							<div class="lg:w-1/2">
-								<h1 class="text-2xl font-bold text-gray-900">To</h1>
+								<h1 class="text-2xl font-bold text-gray-900 headR">To</h1>
 								<br />
 								<form>
 									<div class="input-with-label">
 										<label for="client-name" class="dark:text-gray-900 text-xl">Name:</label>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="text"
 											bind:value={ClientName}
 											id="invoice-company-name"
@@ -628,7 +700,7 @@
 									<div class="input-with-label">
 										<label for="client-email" class="text-gray-900 text-xl">Email:</label>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="email"
 											bind:value={ClientEmail}
 											id="invoice-company-email"
@@ -638,7 +710,7 @@
 									<div class="input-with-label">
 										<label for="client-address" class=" text-gray-900 text-xl">Address:</label>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="text"
 											bind:value={ClientAddress}
 											id="invoice-company-address"
@@ -649,7 +721,7 @@
 									<div class="input-with-label">
 										<label for="client-phone" class="text-gray-900 text-xl">Phone:</label>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="tel"
 											bind:value={ClientPhone}
 											id="invoice-company-phone"
@@ -661,7 +733,7 @@
 											>Mobile:</label
 										>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="tel"
 											bind:value={ClientNumber}
 											id="invoice-company-business-number"
@@ -669,9 +741,11 @@
 										/>
 									</div>
 									<div class="input-with-label">
-										<label for="client-fax" title="Fax Number" class="text-gray-900 text-xl">Fax:</label>
+										<label for="client-fax" title="Fax Number" class="text-gray-900 text-xl"
+											>Fax:</label
+										>
 										<input
-										class="w-full rounded text-xl"
+											class="w-full rounded text-xl"
 											type="tel"
 											bind:value={ClientFax}
 											id="invoice-company-business-number"
@@ -741,19 +815,19 @@
 										<option selected value="365 Days">365 Days</option>
 									</select>
 								</div>
-									{#if showDueInput}
-										<div class="mb-4 flex justify-between items-center text-xl">
-											<label class="mr-5" for="due">Due</label>
-											<input
-												type="date"
-												bind:value={dueDate}
-												name="due"
-												id="due"
-												class="w-4/5 px-3 py-2 border rounded-lg"
-											/>
-										</div>
-									{/if}
-								</div>
+								{#if showDueInput}
+									<div class="mb-4 flex justify-between items-center text-xl">
+										<label class="mr-5" for="due">Due</label>
+										<input
+											type="date"
+											bind:value={dueDate}
+											name="due"
+											id="due"
+											class="w-4/5 px-3 py-2 border rounded-lg"
+										/>
+									</div>
+								{/if}
+							</div>
 						</div>
 
 						<hr class="border-t border-gray-400" />
@@ -856,24 +930,26 @@
 						<div
 							class="gap-12 items-center mx-auto max-w-screen-xl overflow-hidden rounded-lg lg:grid lg:grid-cols-2"
 						>
-							<div class="p-8 " />
-							
-								<div class="w-1/2 text-gray-700">
-									<div class="flex justify-between p-1 invoice-summary-label text-xl">
-										Subtotal: <span class="price">₹{subtotal.toFixed(2)}</span>
-									</div>
-									<div class="flex justify-between p-1 invoice-summary-label text-xl">
-										Tax: <span class="price">₹{tax.toFixed(2)}</span>
-									</div>
-									<div class="flex justify-between p-1 invoice-summary-label text-xl">
-										Total: <span class="price">₹{total.toFixed(2)}</span>
-									</div>
-									<div class="flex justify-between font-bold text-lg p-1 invoice-summary-label text-xl">
-										Balance due: <span class="price">₹{balanceDue.toFixed(2)}</span>
-									</div>
+							<div class="p-8" />
+
+							<div class="w-1/2 text-gray-700">
+								<div class="flex justify-between p-1 invoice-summary-label text-xl">
+									Subtotal: <span class="price">₹{subtotal.toFixed(2)}</span>
+								</div>
+								<div class="flex justify-between p-1 invoice-summary-label text-xl">
+									Tax: <span class="price">₹{tax.toFixed(2)}</span>
+								</div>
+								<div class="flex justify-between p-1 invoice-summary-label text-xl">
+									Total: <span class="price">₹{total.toFixed(2)}</span>
+								</div>
+								<div
+									class="flex justify-between font-bold text-lg p-1 invoice-summary-label text-xl"
+								>
+									Balance due: <span class="price">₹{balanceDue.toFixed(2)}</span>
 								</div>
 							</div>
-						
+						</div>
+
 						<div class="p-3 h-full py-12">
 							<label class="text-2xl font-bold" for="Signature">Signature</label>
 							<input
@@ -943,6 +1019,7 @@
 	.invoice-detail-body div div .headR {
 		padding-left: 14%;
 		margin: 0 auto;
+		padding-top: 4%;
 	}
 	.input-with-label {
 		overflow: hidden;
@@ -993,4 +1070,36 @@
 	select {
 		width: 65%;
 	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-flow: column;
+		float: right;
+		margin-right: 18%;
+	}
+
+	.logo_image {
+		display: inline-block;
+		max-height: 150px;
+		max-width: 150px;
+	}
+	.invoice-title {
+		display: inline-block;
+		/* align-items:center;
+		justify-content:center;
+		flex-flow:column; */
+		/* float: left; */
+		/* margin-top:3em; */
+		margin-left: 7%;
+		height: 100px;
+		width: 150px;
+		margin-top: 4%;
+	}
+	/* .invoice-detail-body 
+	{
+		display:flex;
+		margin-top:10px;
+	} */
 </style>
