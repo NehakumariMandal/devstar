@@ -186,29 +186,31 @@
 			);
 			doc.addImage(URL.createObjectURL(imageBlob), 'JPEG', 150, 40, 40, 40);
 			doc.setFont(undefined, 'bold');
-			doc.text(170, 95, 'INVOICE');
-			doc.text(170, 107, 'DATE');
+			doc.text(174, 95, 'INVOICE');
+			doc.text(180, 107, 'DATE');
 			doc.text(170, 119, 'DUE DATE');
 			doc.text(170, 131, 'BALANCE');
 			doc.setFont(undefined, 'normal');
-			doc.text(170, 100, invoiceNo);
+			doc.text(175, 100, invoiceNo);
 			doc.text(170, 112, currentDate);
 			doc.text(170, 124, dueDate);
-			doc.text(170, 136, '$'+balanceDue.toString());
+			let balen = balanceDue.toString().length;
+			doc.text(210-(balen + 21)-(balen*2), 136, '$'+balanceDue.toString());
 		} else {
 			const imgData =
 				'https://is2-ssl.mzstatic.com/image/thumb/Purple122/v4/df/8a/8f/df8a8fab-91e6-7781-529d-bf4ca601b64f/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.jpeg/256x256bb.jpg';
 			// doc.addImage(imgData, 'JPEG', 150, 40, 40, 40);
 			doc.setFont(undefined, 'bold');
-			doc.text(170, 40, 'INVOICE');
-			doc.text(170, 52, 'DATE');
+			doc.text(174, 40, 'INVOICE');
+			doc.text(180, 52, 'DATE');
 			doc.text(170, 64, 'DUE DATE');
 			doc.text(170, 76, 'BALANCE');
 			doc.setFont(undefined, 'normal');
-			doc.text(170, 45, invoiceNo);
+			doc.text(175, 45, invoiceNo);
 			doc.text(170, 57, currentDate);
 			doc.text(170, 69, dueDate);
-			doc.text(170, 81, '$'+balanceDue.toString());
+			let balen = balanceDue.toString().length;
+			doc.text(210-(balen + 21)-(balen*2), 81, '$'+balanceDue.toString());
 		}
 		if (
 			ClientAddress.length != 0 ||
@@ -219,7 +221,7 @@
 			ClientPhone.length != 0
 		) {
 			doc.setLineDashPattern([1, 1], 0);
-			if (y >= 80) doc.line(20, (y += 10), 160, y);
+			if (y >= 80) doc.line(20, (y += 10), 150, y);
 			else doc.line(20, (y += 10), 140, y);
 			doc.setLineDashPattern();
 			doc.text(20, (y += 10), 'BILL TO');
@@ -245,7 +247,7 @@
 		if (y < 80) {
 			y = 80;
 		}
-		if(selectedImage){
+		if(selectedImage && y<136){
 			y = 136;
 		}
 		doc.setTextColor(0, 0, 0);
